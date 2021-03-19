@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="thinkphp5自动生成文档"/>
+
+
+
+
+  <meta name="keywords" content="PHP,thinkphp," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="平等雲霧" >
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="http://www.opqnext.com/2021/03/190930/"/>
+
+
+<meta name="description" content="一个基于 thinkphp5 的PHP自动生成api文档的库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="thinkphp5自动生成文档">
+<meta property="og:url" content="http://www.opqnext.com/2021/03/190930/">
+<meta property="og:site_name" content="平等雲霧">
+<meta property="og:description" content="一个基于 thinkphp5 的PHP自动生成api文档的库">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://image.opqnext.com/apple.jpg">
+<meta property="og:image" content="https://image.opqnext.com/grape.jpg">
+<meta property="og:image" content="https://image.opqnext.com/grape_2.png">
+<meta property="article:published_time" content="2021-03-19T01:30:00.000Z">
+<meta property="article:modified_time" content="2021-03-19T03:41:21.476Z">
+<meta property="article:author" content="opqnext">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="thinkphp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://image.opqnext.com/apple.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+<script data-ad-client="ca-pub-3757226206829802" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <title> thinkphp5自动生成文档 - 平等雲霧 </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">平等雲霧</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          thinkphp5自动生成文档
+        
+      </h1>
+
+      <time class="post-time">
+          3月 19 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>一个基于 thinkphp5 的PHP自动生成api文档的库</p>
+ <span id="more"></span>
+
+<h1 id="reflection-api-doc"><a href="#reflection-api-doc" class="headerlink" title="reflection_api_doc"></a>reflection_api_doc</h1><p>这是一个基于 thinkphp5 的PHP自动生成api文档的库</p>
+<ol>
+<li>使用方法：</li>
+</ol>
+<p>在 extra 目录下创建文件名为 documents.php 的配置文件。</p>
+<p>配置文件内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">return [</span><br><span class="line">    &#39;title&#39; &#x3D;&gt; &quot;北京想得美科技有限公司&quot;,</span><br><span class="line">    &#39;description&#39; &#x3D;&gt; &#39;&quot;想的美app&quot; | APi接口文档等等。&#39;,</span><br><span class="line">    &#39;template&#39; &#x3D;&gt; &#39;apple&#39;, &#x2F;&#x2F; 苹果绿:apple 葡萄紫:grape</span><br><span class="line">    &#39;class&#39; &#x3D;&gt; [</span><br><span class="line">        &#39;app\index\controller\Demo&#39;,</span><br><span class="line">        &#39;app\index\controller\Product&#39;,</span><br><span class="line">        &#39;app\index\controller\Store&#39;,</span><br><span class="line">    ],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>其中 template 为模板类型，暂时提供两种模板风格，分别为苹果绿和葡萄紫，虽然两套模板都是巨丑无比。所以使用的过程中也可以自己开发模板。</p>
+<p><strong>重点:</strong> class 为将要生成文档的类(带命名空间)</p>
+<ol start="2">
+<li>示例：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>注释参数</th>
+<th>含义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@title</td>
+<td>标题</td>
+<td>文档生成的类方法标题</td>
+</tr>
+<tr>
+<td>@desc</td>
+<td>描述</td>
+<td>格式如下，地址、请求方式、备注等</td>
+</tr>
+<tr>
+<td>@param</td>
+<td>接收参数</td>
+<td>格式如下，名称、类型、是否必须、默认值、说明等</td>
+</tr>
+<tr>
+<td>@return</td>
+<td>返回参数</td>
+<td>格式如下，名称、类型、是否必须、说明等</td>
+</tr>
+</tbody></table>
+<p>类的具体实现方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @title 文章接口管理</span><br><span class="line"> *&#x2F;</span><br><span class="line">class Article extends Controller</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * @title 获取文章列表</span><br><span class="line">     * @desc  &#123;&quot;0&quot;:&quot;接口地址：http:&#x2F;&#x2F;open.opqnext.com&#x2F;index.php?c&#x3D;article&amp;a&#x3D;index&quot;,&quot;1&quot;:&quot;请求方式：GET&quot;,&quot;2&quot;:&quot;接口备注：必须传入keys值用于通过加密验证&quot;&#125;</span><br><span class="line">     * @param &#123;&quot;name&quot;:&quot;page&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:true,&quot;default&quot;:&quot;1&quot;,&quot;desc&quot;:&quot;页数&quot;&#125;</span><br><span class="line">     * @param &#123;&quot;name&quot;:&quot;keys&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;default&quot;:&quot;xxx&quot;,&quot;desc&quot;:&quot;加密字符串,substr(md5(\&quot;约定秘钥\&quot;.$page),8,16)&quot;&#125;</span><br><span class="line">     * @param &#123;&quot;name&quot;:&quot;word&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:false,&quot;default&quot;:&quot;null&quot;,&quot;desc&quot;:&quot;搜索关键字&quot;&#125;</span><br><span class="line">     * @param &#123;&quot;name&quot;:&quot;cate&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:false,&quot;default&quot;:0,&quot;desc&quot;:&quot;分类ID,不传表示所有分类&quot;&#125;</span><br><span class="line">     * @param &#123;&quot;name&quot;:&quot;size&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:false,&quot;default&quot;:5,&quot;desc&quot;:&quot;每页显示条数，默认为5&quot;&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;status&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;返回码：1成功,0失败&quot;,&quot;level&quot;:1&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;message&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;返回信息&quot;,&quot;level&quot;:1&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;data&quot;,&quot;type&quot;:&quot;array&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;返回数据&quot;,&quot;level&quot;:1&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;id&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章ID(22位字符串)&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;title&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章标题&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;thumb&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章列表图&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;content&quot;,&quot;type&quot;:&quot;text&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章内容&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;cate&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章分类&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;tags&quot;,&quot;type&quot;:&quot;array&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章标签&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;id&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;标签ID&quot;,&quot;level&quot;:3&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;tag&quot;,&quot;type&quot;:&quot;string&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;标签名称&quot;,&quot;level&quot;:3&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;count&quot;,&quot;type&quot;:&quot;int&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;标签使用数&quot;,&quot;level&quot;:3&#125;</span><br><span class="line">     * @return &#123;&quot;name&quot;:&quot;img&quot;,&quot;type&quot;:&quot;array&quot;,&quot;required&quot;:true,&quot;desc&quot;:&quot;文章组图&quot;,&quot;level&quot;:2&#125;</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public function index()&#123;</span><br><span class="line">        &#x2F;&#x2F;... 具体实现方法</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>预览</li>
+</ol>
+<p>长相一般的苹果绿：</p>
+<p><img src="https://image.opqnext.com/apple.jpg"></p>
+<p>长相也一般的葡萄紫：</p>
+<p><img src="https://image.opqnext.com/grape.jpg"></p>
+<p><img src="https://image.opqnext.com/grape_2.png"></p>
+<ol start="4">
+<li>支持<br>如果有使用自动生成文档的需求或者之类的，欢迎加入 QQ群:452209691 共同探讨。</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/PHP/">PHP</a>
+		  
+			<a href="/tags/thinkphp/">thinkphp</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/03/191020/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">迅搜(xunsearch)的安装使用以及操作类分享</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/03/190925/">
+        <span class="next-text nav-default">搭建GIT服务器教程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5c399a6571456ab7f05e2c4dc81303fe";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+    
+        &copy;
+    
+        2020 -
+    
+    2021
+    <span class="footer-author">opqnext.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a> | QQ群:939627878
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -42,15 +42,15 @@
 <meta property="og:site_name" content="平等雲霧">
 <meta property="og:description" content="迅搜(xunsearch)是采用 C&#x2F;C++ 基于 xapian 和 scws 开发的全文搜索引擎解决方案,适用于php全文检索、mysql全文检索和各种站内搜索。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ojv5ow1um.qnssl.com/xunsearch001.png">
-<meta property="og:image" content="https://ojv5ow1um.qnssl.com/xunsearch002.png">
-<meta property="og:image" content="https://ojv5ow1um.qnssl.com/xunsearch003.png">
+<meta property="og:image" content="http://cdn2.opqnext.com/xunsearch001.png">
+<meta property="og:image" content="http://cdn2.opqnext.com/xunsearch002.png">
+<meta property="og:image" content="http://cdn2.opqnext.com/xunsearch003.png">
 <meta property="article:published_time" content="2021-03-19T02:20:00.000Z">
-<meta property="article:modified_time" content="2021-03-19T03:43:11.711Z">
+<meta property="article:modified_time" content="2021-03-23T01:06:27.689Z">
 <meta property="article:author" content="opqnext">
 <meta property="article:tag" content="xunsearch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ojv5ow1um.qnssl.com/xunsearch001.png">
+<meta name="twitter:image" content="http://cdn2.opqnext.com/xunsearch001.png">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
@@ -144,14 +144,13 @@
 <p>迅搜(xunsearch)是采用 C/C++ 基于 xapian 和 scws 开发的全文搜索引擎解决方案,适用于php全文检索、mysql全文检索和各种站内搜索。</p>
 </blockquote>
 <p>我原来做了一个小站，抓了很多很多文章，放到mysql中进行 like 搜索的效率是很低很低的，所以考虑了用迅搜，搜索引擎中只存了文章id、标题、tag、描述、文章分类、然后根据索引的文章id再到 mysql 读取文章内容。原来用了 RPC ，后来就没有那么多机器了 :cold_sweat::sob::dizzy_face: 那直接来吧。</p>
-<p>先听一首 Jeremy Lim 的 <a target="_blank" rel="noopener" href="http://music.163.com/#/song?id=29715175">Into Ether (Original Mix)</a> 压压惊呐！</p>
 <ul>
 <li>安装</li>
 </ul>
 <p>我是在 CentOs 下进行安装的，其实迅搜的教程挺详细的。我只是简化了一下。吧？</p>
 <p>1.运行下面指令下载、解压安装包。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http:&#x2F;&#x2F;www.xunsearch.com&#x2F;download&#x2F;xunsearch-full-latest.tar.bz2</span><br></pre></td></tr></table></figure>
-<p><img src="https://ojv5ow1um.qnssl.com/xunsearch001.png" alt="下载"></p>
+<p><img src="http://cdn2.opqnext.com/xunsearch001.png" alt="下载"></p>
 <p>2.进入xunsearch-full-1.4.9目录，执行setup.sh文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;setup.sh		&#x2F;&#x2F;执行安装命令</span><br></pre></td></tr></table></figure>
 <p>默认安装目录：/usr/local/xunsearch</p>
@@ -160,7 +159,7 @@
 <p>搜索系统将所有数据保存在 /usr/local/xunsearch/data 目录中。如果您希望数据目录另行安排或转移至其它分区，请将 /usr/local/xunsearch/data 作为软链接指向真实目录。<br>软连接到：/data/xunsearch/data</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s &#x2F;data&#x2F;xunsearch&#x2F;data	&#x2F;usr&#x2F;local&#x2F;xunsearch&#x2F;data</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://ojv5ow1um.qnssl.com/xunsearch002.png" alt="软连接"></p>
+<p><img src="http://cdn2.opqnext.com/xunsearch002.png" alt="软连接"></p>
 <p>Info: 出于性能和多数需求考虑 xunsearch 服务端和 SDK API 通讯时没有加密和验证处理， 并且默认情况 xs-ctl.sh 启动的服务程序是绑定并监听在 127.0.0.1 上。</p>
 <p><em>如果您的 SDK 调用和 xunsearch 服务端不在同一服务器，请使用 -b inet 方式启动脚本，</em> 并注意借助类似 iptables 的防火墙来控制 xunsearch 的 8383/8384 两个端口的访问权限。 启动脚本用法举例如下，以下均为合法使用方式：</p>
 <ul>
@@ -171,7 +170,7 @@
 </ul>
 <p>4.启动讯搜服务：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;local&#x2F;xunsearch&#x2F;bin&#x2F;xs-ctl.sh start</span><br></pre></td></tr></table></figure>
-<p><img src="https://ojv5ow1um.qnssl.com/xunsearch003.png" alt="启动"></p>
+<p><img src="http://cdn2.opqnext.com/xunsearch003.png" alt="启动"></p>
 <p>检测你的服务器是否符合讯搜的最低要求：(PHP执行)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php &#x2F;usr&#x2F;local&#x2F;xunsearch&#x2F;sdk&#x2F;php&#x2F;util&#x2F;RequiredCheck.php</span><br></pre></td></tr></table></figure>
 

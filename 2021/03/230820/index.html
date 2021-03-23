@@ -45,7 +45,7 @@
 <meta property="og:image" content="http://cdn2.opqnext.com/20170010.jpg">
 <meta property="og:image" content="http://cdn2.opqnext.com/whoops.jpg">
 <meta property="article:published_time" content="2021-03-23T00:20:00.000Z">
-<meta property="article:modified_time" content="2021-03-23T05:53:23.931Z">
+<meta property="article:modified_time" content="2021-03-23T05:54:29.690Z">
 <meta property="article:author" content="opqnext">
 <meta property="article:tag" content="PHP">
 <meta property="article:tag" content="PHP框架">
@@ -172,7 +172,7 @@
 <li>repositories 是换成国内的源，更新下载包的时候速度会比较快一些。</li>
 </ol>
 <p> 然后 命令行模式去目录下执行 composer install 目录中会多出一个 vendor 目录和 composer.lock 文件，composer安装（停顿一下）包有两种方法，我每次在require增加新的包，就直接执行 composer update 就OK了。虽然我可能说的比较混乱，但是这不是今天的重点，你先去google、百度，回头再说composer。嗯，就这么愉快的决定了。</p>
-<p> 在index.php里引入自动加载文件<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Autoload 自动载入</span><br><span class="line">require &#39;vendor&#x2F;autoload.php&#39;;</span><br></pre></td></tr></table></figure></p>
+<p> 在index.php里引入自动加载文件<br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Autoload 自动载入</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;vendor/autoload.php&#x27;</span>;</span><br></pre></td></tr></table></figure></p>
 <p> ps:现在说说上面的那个两个包。</p>
 <ul>
 <li>“filp/whoops”</li>

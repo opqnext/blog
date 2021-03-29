@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="php-fpm的pool"/>
+
+
+
+
+  <meta name="keywords" content="php," />
+
+
+<meta name="baidu_union_verify" content="96b849089410e3844e208f6d3efe0385">
+
+
+
+  <link rel="alternate" href="/default" title="平等雲霧" >
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="http://www.opqnext.com/2021/02/031030/"/>
+
+
+<meta name="description" content="一、php-fpm的pool和LAMP不同的是，在LNMP架构中，php-fpm作为独立的一个服务存在。php-fpm的配置文件为&#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf，它同样也支持include语句，类似于nginx.conf里面的include。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php-fpm的pool">
+<meta property="og:url" content="http://www.opqnext.com/2021/02/031030/">
+<meta property="og:site_name" content="平等雲霧">
+<meta property="og:description" content="一、php-fpm的pool和LAMP不同的是，在LNMP架构中，php-fpm作为独立的一个服务存在。php-fpm的配置文件为&#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf，它同样也支持include语句，类似于nginx.conf里面的include。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-03T02:30:00.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:05:40.835Z">
+<meta property="article:author" content="opqnext">
+<meta property="article:tag" content="php">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+<script data-ad-client="ca-pub-3757226206829802" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <title> php-fpm的pool - 平等雲霧 </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">平等雲霧</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          php-fpm的pool
+        
+      </h1>
+
+      <time class="post-time">
+          2月 03 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>一、php-fpm的pool<br>和LAMP不同的是，在LNMP架构中，php-fpm作为独立的一个服务存在。<br>php-fpm的配置文件为/usr/local/php-fpm/etc/php-fpm.conf，它同样也支持<br>include语句，类似于nginx.conf里面的include。</p>
+ <span id="more"></span>
+
+<p>Nignx可以配置多个虚拟主机，php-fpm同样也支持配置多个pool，每一个pool可以监听一个端口，也可以监听一个socket。</p>
+<p>查看php-fpm配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 ~] cd &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] ls</span><br><span class="line">pear.conf  php-fpm.conf  php-fpm.conf.default  php.ini</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] cat php-fpm.conf</span><br><span class="line">[global]</span><br><span class="line">pid &#x3D; &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;var&#x2F;run&#x2F;php-fpm.pid</span><br><span class="line">error_log &#x3D; &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;var&#x2F;log&#x2F;php-fpm.log</span><br><span class="line">[www]</span><br><span class="line">listen &#x3D; &#x2F;tmp&#x2F;php-fcgi.sock</span><br><span class="line">listen.mode &#x3D; 666</span><br><span class="line">user &#x3D; php-fpm</span><br><span class="line">group &#x3D; php-fpm</span><br><span class="line">pm &#x3D; dynamic</span><br><span class="line">pm.max_children &#x3D; 50</span><br><span class="line">pm.start_servers &#x3D; 20</span><br><span class="line">pm.min_spare_servers &#x3D; 5</span><br><span class="line">pm.max_spare_servers &#x3D; 35</span><br><span class="line">pm.max_requests &#x3D; 500</span><br><span class="line">rlimit_files &#x3D; 1024</span><br></pre></td></tr></table></figure>
+<p>修改php-fpm.conf文件增加pool</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] vim php-fpm.conf</span><br><span class="line"></span><br><span class="line">  1 [global]</span><br><span class="line">  2 pid &#x3D; &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;var&#x2F;run&#x2F;php-fpm.pid</span><br><span class="line">  3 error_log &#x3D; &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;var&#x2F;log&#x2F;php-fpm.log</span><br><span class="line">  4 [www]</span><br><span class="line">  5 listen &#x3D; &#x2F;tmp&#x2F;php-fcgi.sock</span><br><span class="line">  6 listen.mode &#x3D; 666</span><br><span class="line">  7 user &#x3D; php-fpm</span><br><span class="line">  8 group &#x3D; php-fpm</span><br><span class="line">  9 pm &#x3D; dynamic</span><br><span class="line"> 10 pm.max_children &#x3D; 50</span><br><span class="line"> 11 pm.start_servers &#x3D; 20</span><br><span class="line"> 12 pm.min_spare_servers &#x3D; 5</span><br><span class="line"> 13 pm.max_spare_servers &#x3D; 35</span><br><span class="line"> 14 pm.max_requests &#x3D; 500</span><br><span class="line"> 15 rlimit_files &#x3D; 1024</span><br><span class="line"> 16    &#x2F;&#x2F;增加以下内容</span><br><span class="line"> 17 [ming]</span><br><span class="line"> 18 listen &#x3D; &#x2F;tmp&#x2F;ming.sock  &#x2F;&#x2F;监听&#x2F;tmp&#x2F;www.sock</span><br><span class="line"> 19 listen.mode &#x3D; 666</span><br><span class="line"> 20 user &#x3D; php-fpm</span><br><span class="line"> 21 group &#x3D; php-fpm</span><br><span class="line"> 22 pm &#x3D; dynamic</span><br><span class="line"> 23 pm.max_children &#x3D; 50</span><br><span class="line"> 24 pm.start_servers &#x3D; 20</span><br><span class="line"> 25 pm.min_spare_servers &#x3D; 5</span><br><span class="line"> 26 pm.max_spare_servers &#x3D; 35</span><br><span class="line"> 27 pm.max_requests &#x3D; 500</span><br><span class="line"> 28 rlimit_files &#x3D; 1024</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;sbin&#x2F;php-fpm -t   &#x2F;&#x2F;检查配置</span><br><span class="line">[03-Dec-2018 21:01:56] NOTICE: configuration file &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf test is successful</span><br><span class="line"></span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] &#x2F;etc&#x2F;init.d&#x2F;php-fpm reload</span><br><span class="line">Reload service php-fpm &#x2F;etc&#x2F;init.d&#x2F;php-fpm: 第 142 行:kill: (876) - 没有那个进程</span><br><span class="line"> done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] service php-fpm start</span><br><span class="line">Starting php-fpm  done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] &#x2F;etc&#x2F;init.d&#x2F;php-fpm reload &#x2F;&#x2F;重载配置</span><br><span class="line">Reload service php-fpm  done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] ps aux |grep php-fpm</span><br><span class="line">root       5190  0.2  0.2 123752  4952 ?        Ss   21:02   0:00 php-fpm: master process (&#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf)</span><br><span class="line">php-fpm    5191  0.0  0.2 123692  4696 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5192  0.0  0.2 123692  4696 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5193  0.0  0.2 123692  4696 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5194  0.0  0.2 123692  4696 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5195  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5196  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5197  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5198  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5199  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5200  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5201  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5202  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5203  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5204  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5205  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5206  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5207  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5208  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5209  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5210  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5211  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5212  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5213  0.0  0.2 123692  4700 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5214  0.0  0.2 123692  4704 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5215  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5216  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5217  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5218  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5219  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5220  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5221  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5222  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5223  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5224  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5225  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5226  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5227  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5228  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5229  0.0  0.2 123692  4708 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5230  0.0  0.2 123692  4712 ?        S    21:02   0:00 php-fpm: pool ming</span><br><span class="line">root       5232  0.0  0.0 112720   984 pts&#x2F;1    R+   21:02   0:00 grep --color&#x3D;auto php-fpm</span><br></pre></td></tr></table></figure>
+<p>可以看到php-fpm已经有www和ming两个pool了。这样就可以在Nginx不同的虚拟主机中调用不同的pool，从而达到相互隔离的目的，两个pool互不影响。</p>
+<p>指定虚拟主机中调用不同的pool</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc] cd &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;vhost&#x2F;</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;vhost] ls</span><br><span class="line">aaa.com.conf  load.conf  proxy.conf  ssl.conf  test.com.conf</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;vhost] vim test.com.conf</span><br><span class="line">···</span><br><span class="line"> 50     location ~ \.php$</span><br><span class="line"> 51     &#123;</span><br><span class="line"> 52         include fastcgi_params;</span><br><span class="line"> 53         fastcgi_pass unix:&#x2F;tmp&#x2F;php-fcgi.sock; &#x2F;&#x2F;这里监听的是www的socket地址</span><br><span class="line"> 54         fastcgi_index index.php;</span><br><span class="line"> 55         fastcgi_param SCRIPT_FILENAME &#x2F;data&#x2F;wwwroot&#x2F;test.com$fastcgi_script_name;</span><br><span class="line"> 56     &#125;</span><br><span class="line">···</span><br><span class="line"></span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;vhost] vim aaa.com.conf</span><br><span class="line">···</span><br><span class="line">  8       location ~ \.php$</span><br><span class="line">  9       </span><br><span class="line"> 10        &#123;</span><br><span class="line"> 11            include fastcgi_params;</span><br><span class="line"> 12            fastcgi_pass unix:&#x2F;tmp&#x2F;ming.sock  &#x2F;&#x2F;这里监听的是ming的socket地址</span><br><span class="line"> 13            fastcgi_index index.php;</span><br><span class="line"> 14            fastcgi_param SCRIPT_FILENAME &#x2F;data&#x2F;wwwroot&#x2F;default$fastcgi_script_name;</span><br><span class="line">15  </span><br><span class="line">16        &#125;</span><br></pre></td></tr></table></figure>
+<p>nginx有多个站点，若只有一个php的pool，当某个站点或某些站点将pool的资源耗尽，就会导致其他使用该pool的站点出现502错误。如果每个站点使用各自独立的pool就不会有这种问题。</p>
+<p>php-fpm配置多个pool的另一种方式<br>[root@minglinux-01 /usr/local/nginx/conf/vhost] vim /usr/local/php-fpm/etc/php-fpm.conf<br>//php-fpm.conf改为如下形式<br>  1 [global]<br>  2 pid = /usr/local/php-fpm/var/run/php-fpm.pid<br>  3 error_log = /usr/local/php-fpm/var/log/php-fpm.log<br>  4 include = etc/php-fpm.d/*.conf</p>
+<p>[root@minglinux-01 /usr/local/nginx/conf/vhost] cd /usr/local/php-fpm/etc/<br>[root@minglinux-01 /usr/local/php-fpm/etc] mkdir php-fpm.d<br>[root@minglinux-01 /usr/local/php-fpm/etc] cd php-fpm.d/</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a><br>  1 [www]<br>  2 listen = /tmp/php-fcgi.sock<br>  3 listen.mode = 666<br>  4 user = php-fpm<br>  5 group = php-fpm<br>  6 pm = dynamic<br>  7 pm.max_children = 50<br>  8 pm.start_servers = 20<br>  9 pm.min_spare_servers = 5<br> 10 pm.max_spare_servers = 35<br> 11 pm.max_requests = 500<br> 12 rlimit_files = 1024</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim ming.conf<br>  1 [ming]<br>  2 listen = /tmp/ming.sock<br>  3 listen.mode = 666<br>  4 user = php-fpm<br>  5 group = php-fpm<br>  6 pm = dynamic<br>  7 pm.max_children = 50<br>  8 pm.start_servers = 20<br>  9 pm.min_spare_servers = 5<br> 10 pm.max_spare_servers = 35<br> 11 pm.max_requests = 500<br> 12 rlimit_files = 1024</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;sbin&#x2F;php-fpm -t</span><br><span class="line">[03-Dec-2018 21:48:25] NOTICE: configuration file &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf test is successful</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] &#x2F;etc&#x2F;init.d&#x2F;php-fpm restart</span><br><span class="line">Gracefully shutting down php-fpm . done</span><br><span class="line">Starting php-fpm  done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] ps aux |grep php-fpm</span><br><span class="line">root       5381  0.0  0.2 227372  4980 ?        Ss   21:49   0:00 php-fpm: master process (&#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf)</span><br><span class="line">php-fpm    5382  0.0  0.2 227312  4712 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5383  0.0  0.2 227312  4712 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5384  0.0  0.2 227312  4712 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5385  0.0  0.2 227312  4712 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5386  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5387  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5388  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5389  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5390  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5391  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5392  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5393  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5394  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5395  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5396  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5397  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5398  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5399  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5400  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5401  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5402  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5403  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5404  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5405  0.0  0.2 227312  4716 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5406  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5407  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5408  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5409  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5410  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5411  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5412  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5413  0.0  0.2 227312  4720 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5414  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5415  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5416  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5417  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5418  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5419  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5420  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5421  0.0  0.2 227312  4724 ?        S    21:49   0:00 php-fpm: pool www</span><br><span class="line">root       5423  0.0  0.0 112720   984 pts&#x2F;1    S+   21:49   0:00 grep --color&#x3D;auto php-fpm</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>二、php-fpm慢执行日志<br>php的网站，建议使用LNMP，当php网站运行慢时php-fpm的慢执行日志可以帮助快速地追踪到问题点。</p>
+<p>开启和查看php-fpm的慢执行日志<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a><br>//再最后面增加如下两行内容<br>  1 [www]<br>  2 listen = /tmp/php-fcgi.sock<br>  3 listen.mode = 666<br>  4 user = php-fpm<br>  5 group = php-fpm<br>  6 pm = dynamic<br>  7 pm.max_children = 50<br>  8 pm.start_servers = 20<br>  9 pm.min_spare_servers = 5<br> 10 pm.max_spare_servers = 35<br> 11 pm.max_requests = 500<br> 12 rlimit_files = 1024<br> 13 request_slowlog_timeout = 1<br> 14 slowlog = /usr/local/php-fpm/var/log/www-slow.log<br>第一行定义超时时间，即PHP的脚本执行时间只要超过1秒就会记录日志，第二行定义慢执行日志的路径和名字。以后遇到PHP网站访问卡顿的问题时，要记得去查看这个慢执行日志。</p>
+<p>测试<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] /usr/local/php-fpm/sbin/php-fpm -t<br>[03-Dec-2018 22:01:46] NOTICE: configuration file /usr/local/php-fpm/etc/php-fpm.conf test is successful</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] /etc/init.d/php-fpm reload<br>Reload service php-fpm  done<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] ls /usr/local/php-fpm/var/log<br>php-fpm.log  www-slow.log<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] cat /usr/local/php-fpm/var/log/www-slow.log   //已生成的慢日志为空</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] cat /usr/local/nginx/conf/vhost/test.com.conf</p>
+<p>···<br> 50     location ~ .php$<br> 51     {<br> 52         include fastcgi_params;<br> 53         fastcgi_pass unix:/tmp/php-fcgi.sock; //监听的是www的socket地址<br> 54         fastcgi_index index.php;<br> 55         fastcgi_param SCRIPT_FILENAME /data/wwwroot/test.com$fastcgi_script_name;<br> 56     }<br>···<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim /data/wwwroot/test.com/sleep.php<br> //创建测试脚本如下</p>
+<p>  1 <?php
+  2 echo "test slow log";
+  3 sleep(2);
+  4 echo "\ndone\n";
+  5 ?></p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] curl -x127.0.0.1:80 test.com/sleep.php   //测试<br>test slow log<br>done<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] cat /usr/local/php-fpm/var/log/www-slow.log</p>
+<p>[03-Dec-2018 22:15:34]  [pool www] pid 5482<br>script_filename = /data/wwwroot/test.com/sleep.php<br>[0x00007fde0e9d8298] sleep() /data/wwwroot/test.com/sleep.php:3 //具体到行</p>
+<p>通过php-fpm的慢执行日志可以非常清晰地了解到PHP的脚本哪里执行时间长，它可以定位到具体的行。</p>
+<p>三、open_basedir<br>当服务器上有多个网站时，不适合在php.ini文件中定义openbasedir，可以在虚拟主机配置文件中定义或在php-fpm中定义</p>
+<p>httpd可以针对每个虚拟主机设置一个open_basedir，php-fpm同样也可以针对不同的pool设置不同的open_basedir。</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a></p>
+<p>  1 [www]<br>  2 listen = /tmp/php-fcgi.sock<br>  3 listen.mode = 666<br>  4 user = php-fpm<br>  5 group = php-fpm<br>  6 pm = dynamic<br>  7 pm.max_children = 50<br>  8 pm.start_servers = 20<br>  9 pm.min_spare_servers = 5<br> 10 pm.max_spare_servers = 35<br> 11 pm.max_requests = 500<br> 12 rlimit_files = 1024<br> 13 request_slowlog_timeout = 1<br> 14 slowlog = /usr/local/php-fpm/var/log/www-slow.log<br> 15 php_admin_value[open_basedir]=/data/wwwroot/test.com:/tmp/  //openbasedir路径定义不正确会无法访问<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] curl -x127.0.0.1:80 test.com/3.php -I<br>HTTP/1.1 200 OK<br>Server: nginx/1.12.2<br>Date: Mon, 03 Dec 2018 14:50:43 GMT<br>Content-Type: text/html; charset=UTF-8<br>Connection: keep-alive<br>X-Powered-By: PHP/5.6.30</p>
+<p>openbasedir路径定义错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] vim www.conf</span><br><span class="line"></span><br><span class="line">  1 [www]</span><br><span class="line">  2 listen &#x3D; &#x2F;tmp&#x2F;php-fcgi.sock</span><br><span class="line">  3 listen.mode &#x3D; 666</span><br><span class="line">  4 user &#x3D; php-fpm</span><br><span class="line">  5 group &#x3D; php-fpm</span><br><span class="line">  6 pm &#x3D; dynamic</span><br><span class="line">  7 pm.max_children &#x3D; 50</span><br><span class="line">  8 pm.start_servers &#x3D; 20</span><br><span class="line">  9 pm.min_spare_servers &#x3D; 5</span><br><span class="line"> 10 pm.max_spare_servers &#x3D; 35</span><br><span class="line"> 11 pm.max_requests &#x3D; 500</span><br><span class="line"> 12 rlimit_files &#x3D; 1024</span><br><span class="line"> 13 request_slowlog_timeout &#x3D; 1</span><br><span class="line"> 14 slowlog &#x3D; &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;var&#x2F;log&#x2F;www-slow.log</span><br><span class="line"> 15 php_admin_value[open_basedir]&#x3D;&#x2F;data&#x2F;wwwroot&#x2F;ming.com:&#x2F;tmp&#x2F;  &#x2F;&#x2F;定义错误</span><br><span class="line"></span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] &#x2F;etc&#x2F;init.d&#x2F;php-fpm reload</span><br><span class="line">Reload service php-fpm  done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] curl -x127.0.0.1:80 test.com&#x2F;3.php -I</span><br><span class="line">HTTP&#x2F;1.1 404 Not Found</span><br><span class="line">Server: nginx&#x2F;1.12.2</span><br><span class="line">Date: Mon, 03 Dec 2018 14:51:45 GMT</span><br><span class="line">Content-Type: text&#x2F;html; charset&#x3D;UTF-8</span><br><span class="line">Connection: keep-alive</span><br><span class="line">X-Powered-By: PHP&#x2F;5.6.30</span><br></pre></td></tr></table></figure>
+<p>php-fpm错误日志<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim /usr/local/php-fpm/etc/php.ini<br>···<br>106 error_reporting = E_ALL //定义错误日志级别<br>···<br> 466 display_errors = Off //Off浏览器不显示错误信息。错误信息不应显示再浏览器中，应保存到指定文件中<br>···<br> 487 log_errors = On //开启错误日志记录功能<br>···<br>575  error_log = /usr/local/php-fpm/var/log/php_errors.log //日志保存路径<br>···</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] ls /usr/local/php-fpm/var/log/<br>php-fpm.log  www-slow.log<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] touch /usr/local/php-fpm/var/log/php_errors.log //手动创建错误日志文件<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] chmod 777 /usr/local/php-fpm/var/log/php_errors.log //修改较高权限以防错误日志写入不成功<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] /etc/init.d/php-fpm restart<br>Gracefully shutting down php-fpm . done<br>Starting php-fpm  done<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] !curl<br>curl -x127.0.0.1:80 test.com/3.php -I<br>HTTP/1.1 404 Not Found<br>Server: nginx/1.12.2<br>Date: Mon, 03 Dec 2018 15:09:59 GMT<br>Content-Type: text/html; charset=UTF-8<br>Connection: keep-alive<br>X-Powered-By: PHP/5.6.30</p>
+<p>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] cat /usr/local/php-fpm/var/log/php_errors.log<br>[03-Dec-2018 15:09:59 UTC] PHP Warning:  Unknown: open_basedir restriction in effect. File(/data/wwwroot/test.com/3.php) is not within the allowed path(s): (/data/wwwroot/ming.com:/tmp/) in Unknown on line 0<br>[03-Dec-2018 15:09:59 UTC] PHP Warning:  Unknown: failed to open stream: Operation not permitted in Unknown on line 0<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a><br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] /etc/init.d/php-fpm restart<br>Gracefully shutting down php-fpm . done<br>Starting php-fpm  done<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] !curl<br>curl -x127.0.0.1:80 test.com/3.php -I<br>HTTP/1.1 200 OK<br>Server: nginx/1.12.2<br>Date: Mon, 03 Dec 2018 15:17:49 GMT<br>Content-Type: text/html; charset=UTF-8<br>Connection: keep-alive<br>X-Powered-By: PHP/5.6.30</p>
+<p>3.php文件在test.com路径下，而open_basedir路径限制在ming.com路径下，因此访问受限。将路径改正后即可访问成功。</p>
+<p>四、php-fpm进程管理<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] cat <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a><br>···<br>pm = dynamic<br>pm.max_children = 50<br>pm.start_servers = 20<br>pm.min_spare_servers = 5<br>pm.max_spare_servers = 35<br>pm.max_requests = 500<br>···<br>配置含义：</p>
+<p>pm = dynamic定义php-fpm的子进程启动模式，dynamic为动态模式；一开始只启动少量的子进程，根据实际需求，动态地增加或者减少子进程，最多不会超过pm.max_children定义的数值。另外一种模式为static，这种模式下子进程数量由pm.max_children决定，一次性启动这么多，不会减少也不会增加。<br>pm.start_servers针对dynamic模式，它定义php-fpm服务在启动服务时产生的子进程数量。后期再根据访问量增加，如果服务器较空闲时也会自动销毁进程。<br>pm.min_spare_servers针对dynamic模式，它定义在空闲时段子进程数的最少数量。若php-fpm进程空闲就会销毁部分进程，但至少会保留5个子进程。<br>pm.max_spare_servers也是针对dynamic模式的，它定义在空闲时段子进程数的最大值，如果高于这个数值就开始清理空闲的子进程。<br>pm.max_requests针对dynamic模式，它定义一个子进程最多处理的请求数，也就是说在一个php-fpm的子进程中最多可以处理这么多请求，当达到这个数值时，它会自动退出，再派生另外的子进程处理后续请求。</p>
+<p>修改配置文件<br>[root@minglinux-01 /usr/local/php-fpm/etc/php-fpm.d] vim <a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a><br>//修改了pm.start_servers = 5</p>
+<p>···<br>pm = dynamic<br>pm.max_children = 50<br>pm.start_servers = 5<br>pm.min_spare_servers = 5<br>pm.max_spare_servers = 35<br>pm.max_requests = 500<br>···</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] &#x2F;etc&#x2F;init.d&#x2F;php-fpm reload</span><br><span class="line">Reload service php-fpm  done</span><br><span class="line">[root@minglinux-01 &#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.d] ps aux |grep php-fpm</span><br><span class="line">root       5824  0.5  0.2 227372  4948 ?        Ss   23:39   0:00 php-fpm: master process (&#x2F;usr&#x2F;local&#x2F;php-fpm&#x2F;etc&#x2F;php-fpm.conf)</span><br><span class="line">php-fpm    5825  0.0  0.2 227312  4712 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5826  0.0  0.2 227312  4712 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5827  0.0  0.2 227312  4712 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5828  0.0  0.2 227312  4712 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5829  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5830  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5831  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5832  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5833  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5834  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5835  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5836  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5837  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5838  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5839  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5840  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5841  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5842  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5843  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5844  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool ming</span><br><span class="line">php-fpm    5845  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5846  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5847  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5848  0.0  0.2 227312  4716 ?        S    23:39   0:00 php-fpm: pool www</span><br><span class="line">php-fpm    5849  0.0  0.2 227312  4720 ?        S    23:39   0:00 php-fpm: pool www</span><br><span class="line">root       5851  0.0  0.0 112720   980 pts&#x2F;1    S+   23:39   0:00 grep --color&#x3D;auto php-fpm</span><br></pre></td></tr></table></figure>
+<p>可以看到php-fpm服务在启动服务时产生的子进程数量变为了5个</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/php/">php</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/02/041030/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">PHP中那些你不知道的坑</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/02/021030/">
+        <span class="next-text nav-default">cgi、fastCGI、php-cgi、php-fpm的概念</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5c399a6571456ab7f05e2c4dc81303fe";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+    
+        &copy;
+    
+        2020 -
+    
+    2021
+    <span class="footer-author">opqnext.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a> | QQ群:939627878
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

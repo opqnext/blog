@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="PHP中那些你不知道的坑"/>
+
+
+
+
+  <meta name="keywords" content="php," />
+
+
+<meta name="baidu_union_verify" content="96b849089410e3844e208f6d3efe0385">
+
+
+
+  <link rel="alternate" href="/default" title="平等雲霧" >
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="http://www.opqnext.com/2021/02/041030/"/>
+
+
+<meta name="description" content="知乎上任何关于PHP的话题，最后都会变成引战贴，树大招风就是这样。今天长话短说，聊点干货，助你在知乎的PHP话题上不落下风。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP中那些你不知道的坑">
+<meta property="og:url" content="http://www.opqnext.com/2021/02/041030/">
+<meta property="og:site_name" content="平等雲霧">
+<meta property="og:description" content="知乎上任何关于PHP的话题，最后都会变成引战贴，树大招风就是这样。今天长话短说，聊点干货，助你在知乎的PHP话题上不落下风。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-04T02:30:00.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:06:48.728Z">
+<meta property="article:author" content="opqnext">
+<meta property="article:tag" content="php">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+<script data-ad-client="ca-pub-3757226206829802" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+    <title> PHP中那些你不知道的坑 - 平等雲霧 </title>
+  <meta name="generator" content="Hexo 5.4.0"></head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">平等雲霧</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          PHP中那些你不知道的坑
+        
+      </h1>
+
+      <time class="post-time">
+          2月 04 2021
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>知乎上任何关于PHP的话题，最后都会变成引战贴，树大招风就是这样。今天长话短说，聊点干货，助你在知乎的PHP话题上不落下风。</p>
+<span id="more"></span>
+<p>函数返回参数之坑</p>
+<p>通常函数返回的数据类型都是固定的，比如Int，String，Array等。但是PHP不一样，PHP中很多函数返回的数据类型并不固定。</p>
+<p>例如json_decode($a)函数，正常情况下这个函数能将字符串转换成数组然后返回，但是少数情况下它会放飞自我。比如传入true会返回true,传入false会返回false，传入NULL会返回NULL。就像欢乐农场一样种瓜得瓜，种豆得豆。如果你传入的字符串不是标准JSON格式，或者JSON串的层数超过定义的值，又会返回NULL。</p>
+<p>通俗点说，正常情况下json_decode()函数会返回数组，其他情况下会返回true，false，NULL。在使用这个函数时不出问题还好，只要一出问题，没认真看文档的人肯定一脸懵。</p>
+<p>这种函数还特别多，PHP manual上给这种返回类型起名叫「mixed」，使用时非常考验程序员的风险意识和经验储备。下面就是没考虑风险的情况：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$pwd</span>=<span class="string">&quot;9527&quot;</span></span><br><span class="line"><span class="keyword">if</span> (strcmp(<span class="variable">$_GET</span>[<span class="string">&#x27;pwd&#x27;</span>],<span class="variable">$pwd</span>) == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line">json_decode(<span class="variable">$a</span>)</span><br><span class="line"></span><br><span class="line">json_encode(<span class="variable">$array</span>)</span><br></pre></td></tr></table></figure>
+<p>strcmp($a,$b) 函数的返回类型也是mixed，正常情况下会返回int，如果传入的是数组，则返回false,因为PHP中false== 0，所以可以绕过。</p>
+<p>json函数之坑</p>
+<p>在PHP7.1之后，json_encode($array) 函数会默认给float类型的数据添加精度。比如数组中有个值是8.6，json_encode之后会变成8.60000000000001。我遇到时也是一脸懵，好在这个问题可以通过修改配置文件修复，在PHP7.2之后默认关闭了json_encode函数保留更多精度的开关。只有PHP7.1版本有这个问题。</p>
+<p>json_decode($json)函数我之前有一篇文章分析过，存在hash碰撞漏洞，至今未改进。</p>
+<p>数组类型太少之坑</p>
+<p>PHP虽然有数组的概念，但全都是HashTable。你可能想创建一个int型的数组，但是PHP不支持。你想创建一个sting类型的数组，PHP也不支持。虽然在语法上看起来像是int，或者string类型的数组，但底层都是HashTable。这导致PHP在算法优化上的空间非常少，更没有办法基于数组扩展更多高级的数据结构，比如双向链表，红黑树等。虽然基于HashTable也能做，但没人会这样去弄。</p>
+<p>至于在知乎上大家说的那些问题，我觉得都不是什么大问题。例如语法不美，速度不快，函数命名不规范……为什么大家都喜欢喷这几点？我猜测是因为这几点容易解释并且不好反驳，比如说$和-&gt;语法不美，你确实没办法反驳，每个人对美的认知不一样。说速度不快，也有道理，因为再怎么优化都有比你快的编程语言。最后『PHP是世界上最好的语言』</p>
+<p>作者：城边编程_认真写技术<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7a7b7b24cc47">https://www.jianshu.com/p/7a7b7b24cc47</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/php/">php</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2021/02/051030/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">PHP微服务框架</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2021/02/031030/">
+        <span class="next-text nav-default">php-fpm的pool</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5c399a6571456ab7f05e2c4dc81303fe";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+    
+        &copy;
+    
+        2020 -
+    
+    2021
+    <span class="footer-author">opqnext.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> and <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a> | QQ群:939627878
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
